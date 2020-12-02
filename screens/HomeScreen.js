@@ -1,0 +1,87 @@
+import React from 'react';
+import {StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
+import SingleTest from "../components/SingleTest";
+
+const lorem ="Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+    "Duis quis accumsan mauris. Donec volutpat elit sit amet magna malesuada, vitae lobortis odio faucibus. " +
+    "Donec commodo mauris suscipit mi luctus convallis. Nam suscipit scelerisque nisi vulputate rutrum. Etiam tincidunt, " +
+    "libero et lobortis tincidunt, urna est tristique turpis, sed facilisis dolor orci et ante.";
+
+class HomeScreen extends React.Component {
+    render() {
+        let {navigation} = this.props;
+        return (
+            <View style={styles.mainContainer}>
+                <View style={styles.headerContainer}>
+                    <Text style={styles.headerText}>Home Page</Text>
+                </View>
+                <SafeAreaView style={styles.bodyContainer}>
+                    <ScrollView>
+                        <SingleTest onPress={() => navigation.navigate('Test')}
+                                    testTitle={"Test title #1"} tags={"#Tag1 #Tag2"}
+                                    description={lorem}/>
+                        <SingleTest onPress={() => navigation.navigate('Test')}
+                                    testTitle={"Test title #2"} tags={"#Tag1 #Tag2"}
+                                    description={lorem}/>
+                        <SingleTest onPress={() => navigation.navigate('Test')}
+                                    testTitle={"Test title #3"} tags={"#Tag1 #Tag2"}
+                                    description={lorem}/>
+                        <SingleTest onPress={() => navigation.navigate('Test')}
+                                    testTitle={"Test title #4"} tags={"#Tag1 #Tag2"}
+                                    description={lorem}/>
+                    </ScrollView>
+                    <View style={styles.checkResult}>
+                        <Text style={styles.resultText}>
+                            Get to know your ranking result
+                        </Text>
+                        <TouchableOpacity onPress={() => navigation.navigate('Result')} style={styles.checkButt}>
+                            <Text>Check!</Text>
+                        </TouchableOpacity>
+
+                    </View>
+                </SafeAreaView>
+            </View>
+        );
+    }
+}
+
+const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1,
+        backgroundColor: '#fff',
+        marginTop:24,
+    },
+    bodyContainer: {
+        flex: 7,
+        backgroundColor: '#fff',
+        paddingTop: 20,
+    },
+    headerContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 2,
+    },
+    headerText: {
+        fontSize: 36,
+    },
+    checkResult: {
+        alignItems: "center",
+        borderTopWidth:1,
+        borderBottomWidth:1,
+    },
+    resultText: {
+        fontSize: 24,
+        paddingTop: 10,
+    },
+    checkButt: {
+        marginVertical:15,
+        backgroundColor: "lightgrey",
+        paddingHorizontal:50,
+        paddingVertical:10,
+        alignItems: "center",
+        borderWidth: 1,
+        borderRadius: 5
+    },
+});
+export default HomeScreen

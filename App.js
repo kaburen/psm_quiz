@@ -1,21 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import HomeScreen from "./screens/HomeScreen";
+import ResultsScreen from "./screens/ResultsScreen";
+import {createDrawerNavigator} from "@react-navigation/drawer";
+import TestScreen from "./screens/TestScreen";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+const lorem ="Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+    "Duis quis accumsan mauris. Donec volutpat elit sit amet magna malesuada, vitae lobortis odio faucibus. " +
+    "Donec commodo mauris suscipit mi luctus convallis. Nam suscipit scelerisque nisi vulputate rutrum. Etiam tincidunt, " +
+    "libero et lobortis tincidunt, urna est tristique turpis, sed facilisis dolor orci et ante.";
+
+const Drawer = createDrawerNavigator();
+
+export default class App extends React.Component {
+
+    render() {
+        return (
+            <NavigationContainer>
+                <Drawer.Navigator initialRouteName="Home">
+                    <Drawer.Screen name="Home"  component={HomeScreen} />
+                    <Drawer.Screen name="Result" component={ResultsScreen} />
+                    <Drawer.Screen name="Test" component={TestScreen}/>
+                </Drawer.Navigator>
+            </NavigationContainer>
+        );
+    }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
