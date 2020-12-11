@@ -8,8 +8,8 @@ class MyModal extends React.Component {
             <View style={styles.modalView}>
                 <View><Text style={{fontSize: 24}}>Rules:</Text>
                     <Text>1. Rule 1</Text>
-                    <Text>1. Rule 2</Text>
-                    <Text>1. Rule 3</Text>
+                    <Text>2. Rule 2</Text>
+                    <Text>3. Rule 3</Text>
                 </View>
                 <TouchableOpacity style={styles.openButton}
                                   onPress={this.props.onPress}>

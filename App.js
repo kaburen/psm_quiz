@@ -39,14 +39,14 @@ export default class App extends React.Component {
 
     componentDidMount() {
         getData().then(r => {
-            if (r !== 'accepted2') {
+            if (r !== 'accepted5') {
                 this.setState({rulesVisible:true})
             }
         })
     }
 
     acceptRules() {
-        storeData('accepted2')
+        storeData('accepted5')
             .then(() => this.setState({rulesVisible: false}));
     }
 

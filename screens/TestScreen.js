@@ -234,8 +234,13 @@ class TestScreen extends React.Component {
                 () => this.setState((prevState) => ({duration: prevState.duration - 1})),
                 1000,
             );
+        } else {
+            return false
         }
+    }
 
+    componentWillUnmount() {
+        clearInterval(this.interval)
     }
 
     componentDidUpdate() {
@@ -273,7 +278,7 @@ class TestScreen extends React.Component {
     nextQuestion = async (key) => {
         const {test, currScore, currQuestion, duration} = this.state
         if (currQuestion < tests.length - 1) {
-            if(duration !==0) {
+            if (duration !== 0) {
                 if (test.answers[key].isCorrect) {
                     this.setState({
                         currScore: currScore + 1,
@@ -286,7 +291,7 @@ class TestScreen extends React.Component {
                 duration: 30
             })
         } else {
-            if(duration !==0) {
+            if (duration !== 0) {
                 if (test.answers[key].isCorrect) {
                     this.setState({
                         currScore: currScore + 1,
