@@ -7,6 +7,28 @@ const lorem ="Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
     "Donec commodo mauris suscipit mi luctus convallis. Nam suscipit scelerisque nisi vulputate rutrum. Etiam tincidunt, " +
     "libero et lobortis tincidunt, urna est tristique turpis, sed facilisis dolor orci et ante.";
 
+const quizList = [
+    {
+        title: 'Test #1',
+        tags: ['#Tag1', "#Tag2"],
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce venenatis condimentum ipsum, eu convallis tellus molestie ac. '
+    },
+    {
+        title: 'Test #2',
+        tags: ['#Tag1', "#Tag2"],
+        description: 'Donec faucibus quam ut lorem auctor, tempus tincidunt nulla fermentum. Aenean rhoncus nibh quis arcu ultrices, id sodales ante pretium.'
+    },
+    {
+        title: 'Test #3',
+        tags: ['#Tag1', "#Tag2"],
+        description: 'Duis in sem sapien. Curabitur eu lorem lacinia, venenatis orci vitae, scelerisque dui.'
+    },{
+        title: 'Test #4',
+        tags: ['#Tag1', "#Tag2"],
+        description: 'Duis in sem sapien. Curabitur eu lorem lacinia, venenatis orci vitae, scelerisque dui.'
+    },
+]
+
 class HomeScreen extends React.Component {
     render() {
         let {navigation} = this.props;
@@ -17,32 +39,26 @@ class HomeScreen extends React.Component {
                 </View>
                 <SafeAreaView style={styles.bodyContainer}>
                     <ScrollView>
-                        <SingleTest onPress={() => navigation.navigate('Test')}
-                                    testTitle={"Test title #1"} tags={"#Tag1 #Tag2"}
-                                    description={lorem}/>
-                        <SingleTest onPress={() => navigation.navigate('Test')}
-                                    testTitle={"Test title #2"} tags={"#Tag1 #Tag2"}
-                                    description={lorem}/>
-                        <SingleTest onPress={() => navigation.navigate('Test')}
-                                    testTitle={"Test title #3"} tags={"#Tag1 #Tag2"}
-                                    description={lorem}/>
-                        <SingleTest onPress={() => navigation.navigate('Test')}
-                                    testTitle={"Test title #4"} tags={"#Tag1 #Tag2"}
-                                    description={lorem}/>
-                    </ScrollView>
-                    <View style={styles.checkResult}>
-                        <Text style={styles.resultText}>
-                            Get to know your ranking result
-                        </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Result')} style={styles.checkButt}>
-                            <Text>Check!</Text>
-                        </TouchableOpacity>
+                        {quizList.map((item, key) =>{
+                            return(<SingleTest key={key} onPress={() => navigation.navigate('Test',{title:item.title,testNumber:key})}
+                                               testTitle={item.title} tags={item.tags}
+                                               description={item.description} />)})}
+                        <View style={styles.checkResult}>
+                            <Text style={styles.resultText}>
+                                Get to know your ranking result
+                            </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Result')} style={styles.checkButt}>
+                                <Text>Check!</Text>
+                            </TouchableOpacity>
 
-                    </View>
+                        </View>
+                    </ScrollView>
                 </SafeAreaView>
             </View>
         );
     }
+
+
 }
 
 const styles = StyleSheet.create({

@@ -4,11 +4,11 @@
     "slug": "psm_quiz",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/quiz_ico.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/quiz_splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1061D4"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
