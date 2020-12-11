@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {ProgressBarAndroid, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 const tests = [
     {
@@ -186,11 +186,13 @@ class TestScreen extends React.Component {
         currScore: 0,
         duration: 30,
         completed: false,
+        bar: 1,
+        barStatus: 1
     }
 
     render() {
         const {title} = this.props.route.params
-        const {currQuestion, test, completed, currScore, duration} = this.state
+        const {currQuestion, test, completed, currScore, duration, bar} = this.state
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.headerContainer}>
@@ -203,6 +205,8 @@ class TestScreen extends React.Component {
                             style={styles.questionTop}>{"Question: " + (currQuestion + 1) + " of " + tests.length}</Text>
                         <Text style={styles.questionTop}>{"Time: " + duration + " sec"}</Text>
                     </View>
+                    <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} progress={bar}
+                                        style={styles.progressBar}/>
                     <View style={styles.questionBot}>
                         <Text numberOfLines={6} style={styles.questionText}>{test.question}</Text>
                     </View>
@@ -231,7 +235,10 @@ class TestScreen extends React.Component {
         if (!this.state.completed) {
             this.loadTest()
             this.interval = setInterval(
-                () => this.setState((prevState) => ({duration: prevState.duration - 1})),
+                () => this.setState((prevState) => ({
+                    duration: prevState.duration - 1,
+                    bar: prevState.bar - this.state.barStatus
+                })),
                 1000,
             );
         } else {
@@ -271,7 +278,8 @@ class TestScreen extends React.Component {
                 question: tests[currQuestion].question,
                 answers: tests[currQuestion].answers,
             },
-            duration: tests[currQuestion].duration
+            duration: tests[currQuestion].duration,
+            barStatus: 1/tests[currQuestion].duration
         })
     }
 
@@ -288,7 +296,9 @@ class TestScreen extends React.Component {
             }
             this.setState({
                 currQuestion: currQuestion + 1,
+                bar: 1,
                 duration: 30
+
             })
         } else {
             if (duration !== 0) {
@@ -352,6 +362,9 @@ const styles = StyleSheet.create({
     },
     questionTop: {
         fontSize: 22,
+    },
+    progressBar: {
+        margin: 24,
     },
 
     questionBot: {
