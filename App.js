@@ -27,7 +27,7 @@ export default class App extends React.Component {
                 <MyModal rulesVisible={rulesVisible} onPress={() => this.acceptRules()}/>
                 <Drawer.Navigator initialRouteName="Home">
                     <Drawer.Screen name="Home" component={HomeScreen}/>
-                    <Drawer.Screen name="Result" component={ResultsScreen}/>
+                    <Drawer.Screen name="Result" component={ResultsScreen} options={{unmountOnBlur:true}}/>
                     {/*TODO map*/}
                     <Drawer.Screen name="Test" component={TestScreen} options={{unmountOnBlur:true}}/>
                 </Drawer.Navigator>

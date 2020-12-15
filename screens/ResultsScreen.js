@@ -2,22 +2,6 @@ import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Text, SafeAreaView} from 'react-native';
 import {Table, Row, Rows} from 'react-native-table-component';
 
-const results = [
-    {
-        "nick": "Marek",
-        "score": 18,
-        "total": 20,
-        "type": "historia",
-        "date": "2018-11-22"
-    },
-    {
-        "nick": "Arek",
-        "score": 12,
-        "total": 20,
-        "type": "bio",
-        "date": "2018-11-23"
-    },
-]
 const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -29,38 +13,60 @@ class ResultsScreen extends Component {
         super(props);
         this.state = {
             tableHead: ['Nick', 'Points', 'Type', 'Date'],
-            refreshing: false
+            refreshing: false,
+            isLoading: true,
+            results: []
         };
     }
 
+    componentDidMount() {
+        this.fetchData()
+    }
+
+    fetchData = () =>{
+        fetch('http://tgryl.pl/quiz/results')
+            .then((response) => response.json())
+            .then((json) => {
+                this.setState({results: json});
+            })
+            .catch((error) => console.error(error))
+            .finally(() => {
+                this.setState({isLoading: false});
+            });
+    }
 
     render() {
-        const state = this.state;
+        const {results, refreshing, isLoading, tableHead} = this.state
         return (
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.headerText}>Results</Text>
                 </View>
                 <Table style={styles.table}>
-                    <Row data={state.tableHead} style={styles.head} textStyle={styles.text}/>
-                    <SafeAreaView >
-                    <FlatList data={results} renderItem={this.renderItem}
-                              keyExtractor={(item, index) => index.toString()} refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.handleOnRefresh}/>}/>
-                    </SafeAreaView>
+                    <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+                    {isLoading ? <Text>Loading...</Text> : <SafeAreaView>
+                        <FlatList data={results} renderItem={this.renderItem}
+                                  keyExtractor={(item, index) => index.toString()}
+                                  refreshControl={<RefreshControl refreshing={refreshing}
+                                                                  onRefresh={this.handleOnRefresh}/>}/>
+                    </SafeAreaView>}
                 </Table>
             </View>
         )
+
     }
 
     renderItem({item}) {
-        return <Row data={[item.nick, item.score + "/" + item.total,item.type, item.date]} style={styles.text}
+        return <Row data={[item.nick, item.score + "/" + item.total, item.type, item.date]} style={styles.text}
                     textStyle={styles.text}/>
     }
+
     handleOnRefresh = () => {
         this.setState({
             refreshing: true
         }, () => {
-            wait(2000).then(() => this.setState({ refreshing: false}));
+            this.fetchData()
+            wait(500).then(() => this.setState({refreshing: false}));
         })
     }
 }
@@ -79,13 +85,14 @@ const styles = StyleSheet.create({
 
     },
     text: {
+        flex: 1,
         marginBottom: 4,
         padding: 4
     },
     table: {
-        flex:1,
-        margin: 4,
-        marginBottom: 24
+        flex: 1,
+        margin: 2,
+        marginBottom: 28
     },
     headerContainer: {
         alignItems: 'center',
@@ -94,7 +101,7 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 36,
-        paddingBottom:8
+        paddingBottom: 8
     },
 
 });

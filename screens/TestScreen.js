@@ -1,178 +1,30 @@
 import React from 'react';
 import {ProgressBarAndroid, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {Input} from 'react-native-elements';
 
-const tests = [
-    {
-        "question": "Ile to jest 2+2*2?",
-        "answers": [
-            {
-                "content": "2",
-                "isCorrect": false
-            },
-            {
-                "content": "6",
-                "isCorrect": true
-            },
-            {
-                "content": "8",
-                "isCorrect": false
-            },
-            {
-                "content": "30",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    },
-    {
-        "question": "Ile to jest 2+2?",
-        "answers": [
-            {
-                "content": "4",
-                "isCorrect": true
-            },
-            {
-                "content": "6",
-                "isCorrect": false
-            },
-            {
-                "content": "5",
-                "isCorrect": false
-            },
-            {
-                "content": "22",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    }, {
-        "question": "Która godzina to południe?",
-        "answers": [
-            {
-                "content": "21:00",
-                "isCorrect": false
-            },
-            {
-                "content": "12:00",
-                "isCorrect": true
-            },
-            {
-                "content": "12:38",
-                "isCorrect": false
-            },
-            {
-                "content": "16:20",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    }, {
-        "question": "Jak zrobić przewrót w przód?",
-        "answers": [
-            {
-                "content": "do przodu",
-                "isCorrect": false
-            },
-            {
-                "content": "do tyłu",
-                "isCorrect": false
-            },
-            {
-                "content": "w bok",
-                "isCorrect": false
-            },
-            {
-                "content": "jak najszybciej",
-                "isCorrect": true
-            },
-        ],
-        "duration": 15
-    }, {
-        "question": "Ile to jest 1GB?",
-        "answers": [
-            {
-                "content": "1024MB",
-                "isCorrect": true
-            },
-            {
-                "content": "1024kB",
-                "isCorrect": false
-            },
-            {
-                "content": "1024B",
-                "isCorrect": false
-            },
-            {
-                "content": "1024TB",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    }, {
-        "question": "W którym roku Krzysztof Kolumb odkrył Amerykę?",
-        "answers": [
-            {
-                "content": "1490",
-                "isCorrect": false
-            },
-            {
-                "content": "1492",
-                "isCorrect": true
-            },
-            {
-                "content": "1512",
-                "isCorrect": false
-            },
-            {
-                "content": "1502",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    }, {
-        "question": "W którym roku miał miejsce zamach na Jana Pawła II",
-        "answers": [
-            {
-                "content": "1981",
-                "isCorrect": false
-            },
-            {
-                "content": "1980",
-                "isCorrect": true
-            },
-            {
-                "content": "1991",
-                "isCorrect": false
-            },
-            {
-                "content": "1990",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    }, {
-        "question": "Kiedy przeprowadznono zamach na World Trade Center?",
-        "answers": [
-            {
-                "content": "11 września 2001",
-                "isCorrect": true
-            },
-            {
-                "content": "9 listopada 2001",
-                "isCorrect": false
-            },
-            {
-                "content": "19 listopada 2001",
-                "isCorrect": false
-            },
-            {
-                "content": "11 września 2002",
-                "isCorrect": false
-            },
-        ],
-        "duration": 15
-    },
-]
+
+let tests = [{
+    "question": "Loading...",
+    "answers": [
+        {
+            "content": "Loading...",
+            "isCorrect": false
+        },
+        {
+            "content": "Loading...",
+            "isCorrect": false
+        },
+        {
+            "content": "Loading...",
+            "isCorrect": false
+        },
+        {
+            "content": "Loading...",
+            "isCorrect": false
+        },
+    ],
+    "duration": 5
+},]
 
 
 class TestScreen extends React.Component {
@@ -181,49 +33,58 @@ class TestScreen extends React.Component {
             question: "",
             answers: [],
         },
-        testNumber: this.props.route.params.testNumber,
         currQuestion: 0,
         currScore: 0,
         duration: 30,
         completed: false,
         bar: 1,
-        barStatus: 1
+        barStatus: 1,
+        loaded: false,
+        isLoading: true,
+        nickname: '',
+        tags: [],
     }
 
     render() {
         const {title} = this.props.route.params
-        const {currQuestion, test, completed, currScore, duration, bar} = this.state
+        const {currQuestion, test, completed, currScore, duration, bar, loaded, isLoading} = this.state
         return (
             <View style={styles.mainContainer}>
                 <View style={styles.headerContainer}>
                     <Text style={styles.headerText}>{title}</Text>
                 </View>
-
-                {!completed && <View style={styles.bodyContainer}>
-                    <View style={styles.questionContainer}>
-                        <Text
-                            style={styles.questionTop}>{"Question: " + (currQuestion + 1) + " of " + tests.length}</Text>
-                        <Text style={styles.questionTop}>{"Time: " + duration + " sec"}</Text>
-                    </View>
-                    <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} progress={bar}
-                                        style={styles.progressBar}/>
-                    <View style={styles.questionBot}>
-                        <Text numberOfLines={6} style={styles.questionText}>{test.question}</Text>
-                    </View>
-                    <View style={styles.checkResult}>
-                        {test.answers.map((val, key) => {
-                                return (<TouchableOpacity style={styles.checkButt} key={key}
-                                                          onPress={() => this.handleClick(key)}>
-                                    <Text>{val.content}</Text>
-                                </TouchableOpacity>)
-                            }
-                        )}
-                    </View>
-                </View>}
+                {!loaded && isLoading ? <Text>Loading...</Text> : (<>
+                    {!completed && <View style={styles.bodyContainer}>
+                        <View style={styles.questionContainer}>
+                            <Text
+                                style={styles.questionTop}>{"Question: " + (currQuestion + 1) + " of " + tests.length}</Text>
+                            <Text style={styles.questionTop}>{"Time: " + duration + " sec"}</Text>
+                        </View>
+                        <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} progress={bar}
+                                            style={styles.progressBar}/>
+                        <View style={styles.questionBot}>
+                            <Text numberOfLines={6} style={styles.questionText}>{test.question}</Text>
+                        </View>
+                        <View style={styles.checkResult}>
+                            {test.answers.map((val, key) => {
+                                    return (<TouchableOpacity style={styles.checkButt} key={key}
+                                                              onPress={() => this.handleClick(key)}>
+                                        <Text>{val.content}</Text>
+                                    </TouchableOpacity>)
+                                }
+                            )}
+                        </View>
+                    </View>}
+                </>)}
                 {completed && <View style={styles.bodyContainer}>
                     <Text style={styles.resultText}>Your score: {currScore + " / " + tests.length} </Text>
-                    <TouchableOpacity style={styles.openButton} onPress={() => this.saveResult()}>
-                        <Text>Save to results</Text>
+                    <Text style={styles.submitText}>Share your result!</Text>
+                    <View style={{marginHorizontal: 75}}><Input style={{marginTop: 20}} value={this.state.nick}
+                                 onChangeText={(value) => this.handleChange(value)}
+                                 placeholder={"Nickname"}/>
+                    </View>
+                    <TouchableOpacity style={styles.openButton} onPress={() => this.submitData()}>
+                        <Text style={{color: '#ffffff', paddingHorizontal: 2}}>Submit and proceed to results</Text>
                     </TouchableOpacity>
                 </View>
                 }
@@ -232,8 +93,9 @@ class TestScreen extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchData()
+        this.setState({loaded: true})
         if (!this.state.completed) {
-            this.loadTest()
             this.interval = setInterval(
                 () => this.setState((prevState) => ({
                     duration: prevState.duration - 1,
@@ -260,10 +122,50 @@ class TestScreen extends React.Component {
         }
     }
 
+    handleChange = (nick) => {
+        this.setState({
+            ...this.state,
+            nick
+        })
+    }
     handleClick = (key) => {
         this.nextQuestion(key).then(r => {
             this.loadTest()
         })
+    }
+
+    fetchData = () => {
+        const {id} = this.props.route.params
+        fetch(`http://tgryl.pl/quiz/test/${id}`)
+            .then((response) => response.json())
+            .then((json) => {
+                tests = json.tasks
+                this.setState({tags: json.tags})
+            }).then(() => this.loadTest())
+            .catch((error) => console.error(error))
+            .finally(() => {
+                this.setState({isLoading: false});
+            });
+    }
+
+    submitData = () => {
+        const {nick, currScore, tags} = this.state;
+
+        const result = {
+            nick: nick,
+            score: currScore,
+            total: tests.length,
+            type: tags[0]
+        }
+
+        fetch(`http://tgryl.pl/quiz/result`, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(result)
+        }).then(() => this.saveResult())
     }
 
     saveResult = () => {
@@ -279,7 +181,7 @@ class TestScreen extends React.Component {
                 answers: tests[currQuestion].answers,
             },
             duration: tests[currQuestion].duration,
-            barStatus: 1/tests[currQuestion].duration
+            barStatus: 1 / tests[currQuestion].duration
         })
     }
 
@@ -334,7 +236,8 @@ const styles = StyleSheet.create({
         paddingVertical: 24
     },
     headerText: {
-        fontSize: 36,
+        fontSize: 22,
+        textAlign: 'center'
     },
     checkResult: {
         flexDirection: "row",
@@ -386,13 +289,19 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     openButton: {
-        backgroundColor: "#FF9500",
+        backgroundColor: "#1061d4",
         borderRadius: 20,
         padding: 10,
         marginTop: 20,
         justifyContent: "center",
-        marginHorizontal: 100,
+        marginHorizontal: 80,
         alignItems: 'center'
+    },
+    submitText: {
+        marginTop: 40,
+        fontSize: 18,
+        paddingTop: 10,
+        textAlign: 'center',
     },
 
 });

@@ -13,7 +13,7 @@ class MyModal extends React.Component {
                 </View>
                 <TouchableOpacity style={styles.openButton}
                                   onPress={this.props.onPress}>
-                    <Text>I Agree</Text>
+                    <Text style={{color:'#ffffff'}}>I Agree</Text>
                 </TouchableOpacity>
             </View>
         </Modal>;
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
         position: "absolute",
     },
     openButton: {
-        backgroundColor: "#FF9500",
+        backgroundColor: "#1061d4",
         borderRadius: 20,
         padding: 10,
         marginTop: 20,
