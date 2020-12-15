@@ -43,12 +43,11 @@ class ResultsScreen extends Component {
                     <Text style={styles.headerText}>Results</Text>
                 </View>
                 <Table style={styles.table}>
-                    <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
-                    {isLoading ? <Text>Loading...</Text> : <SafeAreaView>
+                    <Row data={tableHead} style={styles.head} textStyle={[styles.text,{color:'#ebebeb', marginTop: 6}]}/>
+                    {isLoading ? <Text>Loading...</Text> : <SafeAreaView style={{marginBottom:36}}>
                         <FlatList data={results} renderItem={this.renderItem}
                                   keyExtractor={(item, index) => index.toString()}
-                                  refreshControl={<RefreshControl refreshing={refreshing}
-                                                                  onRefresh={this.handleOnRefresh}/>}/>
+                                  refreshControl={<RefreshControl refreshing={refreshing} onRefresh={this.handleOnRefresh}/>}/>
                     </SafeAreaView>}
                 </Table>
             </View>
@@ -57,6 +56,9 @@ class ResultsScreen extends Component {
     }
 
     renderItem({item}) {
+        if(item.date === undefined) {
+            item.date = item.createdOn.slice(0, 10);
+        }
         return <Row data={[item.nick, item.score + "/" + item.total, item.type, item.date]} style={styles.text}
                     textStyle={styles.text}/>
     }
@@ -75,33 +77,33 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        padding: 16,
         paddingTop: 30,
-        backgroundColor: '#fff'
+        backgroundColor: '#0045c0',
     },
     head: {
         height: 40,
-        backgroundColor: 'lightgray',
-
+        backgroundColor:"#0045c0",
     },
     text: {
+        textAlign: 'center',
         flex: 1,
         marginBottom: 4,
         padding: 4
     },
     table: {
+        backgroundColor: "#ebebeb",
         flex: 1,
-        margin: 2,
-        marginBottom: 28
     },
     headerContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth: 2,
+        borderColor:"#ebebeb"
     },
     headerText: {
+        color:'#ebebeb',
         fontSize: 36,
-        paddingBottom: 8
+        paddingBottom: 12
     },
 
 });

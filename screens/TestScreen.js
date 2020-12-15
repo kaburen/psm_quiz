@@ -65,11 +65,12 @@ class TestScreen extends React.Component {
                         <View style={styles.questionBot}>
                             <Text numberOfLines={6} style={styles.questionText}>{test.question}</Text>
                         </View>
-                        <View style={styles.checkResult}>
+
+                        <View style={styles.answersCont}>
                             {test.answers.map((val, key) => {
                                     return (<TouchableOpacity style={styles.checkButt} key={key}
                                                               onPress={() => this.handleClick(key)}>
-                                        <Text>{val.content}</Text>
+                                        <Text style={{color:'#ebebeb'}}>{val.content}</Text>
                                     </TouchableOpacity>)
                                 }
                             )}
@@ -221,27 +222,29 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         marginTop: 24,
-        backgroundColor: '#fff',
+        backgroundColor: '#ebebeb',
 
     },
     bodyContainer: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#ebebeb',
         paddingTop: 30,
     },
     headerContainer: {
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth: 2,
-        paddingVertical: 24
+        paddingVertical: 24,
+        borderColor:'#ebebeb',
+        backgroundColor:"#0045c0"
     },
     headerText: {
+        color:'#ebebeb',
         fontSize: 22,
-        textAlign: 'center'
     },
-    checkResult: {
+    answersCont: {
         flexDirection: "row",
-        marginBottom: 20,
+        marginBottom: 28,
         paddingVertical: 20,
         flexWrap: "wrap",
         alignItems: "center",
@@ -255,9 +258,11 @@ const styles = StyleSheet.create({
     checkButt: {
         marginVertical: 20,
         marginHorizontal: 10,
-        backgroundColor: "lightgrey",
+        backgroundColor:"#0045c0",
         alignItems: "center",
+        paddingStart:4,
         justifyContent: "center",
+        textAlign:'center',
         borderWidth: 1,
         borderRadius: 5,
         width: 180,
@@ -277,8 +282,8 @@ const styles = StyleSheet.create({
     },
 
     questionText: {
-        fontSize: 22,
-        paddingBottom: 30,
+        fontSize: 16,
+        paddingBottom: 16,
         textAlign: 'center',
     },
 
@@ -292,7 +297,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#1061d4",
         borderRadius: 20,
         padding: 10,
-        marginTop: 20,
+        marginTop: 10,
         justifyContent: "center",
         marginHorizontal: 80,
         alignItems: 'center'

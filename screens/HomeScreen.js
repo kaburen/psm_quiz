@@ -37,7 +37,7 @@ class HomeScreen extends React.Component {
                                 Get to know your ranking result
                             </Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Result')} style={styles.checkButt}>
-                                <Text style={{color: '#ffffff'}}>Check!</Text>
+                                <Text style={{color: '#ebebeb'}}>Check!</Text>
                             </TouchableOpacity>
 
                         </View>
@@ -74,34 +74,41 @@ const styles = StyleSheet.create({
     },
     bodyContainer: {
         flex: 7,
-        backgroundColor: '#fff',
-        paddingTop: 20,
+        backgroundColor: '#ebebeb',
+        paddingTop: 16
     },
     headerContainer: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         borderBottomWidth: 2,
+        borderColor:'#ebebeb',
+        backgroundColor:"#0045c0",
+
     },
     headerText: {
         fontSize: 36,
+        color:'#ebebeb'
     },
     checkResult: {
+        backgroundColor:"#0045c0",
         alignItems: "center",
         borderTopWidth: 1,
         borderBottomWidth: 1,
     },
     resultText: {
+        color:'#ebebeb',
         fontSize: 24,
         paddingTop: 10,
     },
     checkButt: {
         marginVertical: 15,
-        backgroundColor:"#1061d4",
+        backgroundColor:"#545454",
         paddingHorizontal: 50,
-        paddingVertical: 10,
+        paddingVertical: 12,
         alignItems: "center",
-        borderWidth: 1,
+        borderColor: '#ffffff',
+        borderWidth: 2,
         borderRadius: 5
     },
 });
