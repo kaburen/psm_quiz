@@ -7,7 +7,7 @@ class SingleTest extends React.Component {
             <Text style={styles.testTitle}>
                 {this.props.testTitle}
             </Text>
-            <Text style={styles.tagText}>{this.props.tags}</Text>
+            <Text style={styles.tagText}>{this.props.tags.join(', ')}</Text>
             <Text numberOfLines={2} style={styles.testDesc}>{this.props.description}</Text>
         </TouchableOpacity>;
     }
@@ -23,17 +23,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: 'blue',
         paddingVertical: 10,
-        paddingStart: 15
+        paddingStart: 10,
+        fontFamily:'Inter'
     },
     testTitle: {
         fontSize: 24,
         paddingTop: 10,
-        paddingStart: 15
+        paddingStart: 10,
+        fontFamily:'Inter'
     },
     testDesc: {
         fontSize: 12,
         paddingBottom: 10,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
+        fontFamily:'Roboto'
     }
 });
 export default SingleTest

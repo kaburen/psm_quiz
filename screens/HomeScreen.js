@@ -2,11 +2,6 @@ import React from 'react';
 import {StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 import SingleTest from "../components/SingleTest";
 
-const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-    "Duis quis accumsan mauris. Donec volutpat elit sit amet magna malesuada, vitae lobortis odio faucibus. " +
-    "Donec commodo mauris suscipit mi luctus convallis. Nam suscipit scelerisque nisi vulputate rutrum. Etiam tincidunt, " +
-    "libero et lobortis tincidunt, urna est tristique turpis, sed facilisis dolor orci et ante.";
-
 
 class HomeScreen extends React.Component {
     state = {
@@ -37,7 +32,7 @@ class HomeScreen extends React.Component {
                                 Get to know your ranking result
                             </Text>
                             <TouchableOpacity onPress={() => navigation.navigate('Result')} style={styles.checkButt}>
-                                <Text style={{color: '#ebebeb'}}>Check!</Text>
+                                <Text style={{color: '#ebebeb',fontFamily:'Inter'}}>Check!</Text>
                             </TouchableOpacity>
 
                         </View>
@@ -69,7 +64,7 @@ class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#ebebeb',
         marginTop: 24,
     },
     bodyContainer: {
@@ -88,7 +83,8 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: 36,
-        color:'#ebebeb'
+        color:'#ebebeb',
+        fontFamily:'Inter'
     },
     checkResult: {
         backgroundColor:"#0045c0",
@@ -100,6 +96,8 @@ const styles = StyleSheet.create({
         color:'#ebebeb',
         fontSize: 24,
         paddingTop: 10,
+        fontFamily:'Inter'
+
     },
     checkButt: {
         marginVertical: 15,

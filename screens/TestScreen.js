@@ -41,7 +41,6 @@ class TestScreen extends React.Component {
         barStatus: 1,
         loaded: false,
         isLoading: true,
-        nickname: '',
         tags: [],
     }
 
@@ -70,7 +69,7 @@ class TestScreen extends React.Component {
                             {test.answers.map((val, key) => {
                                     return (<TouchableOpacity style={styles.checkButt} key={key}
                                                               onPress={() => this.handleClick(key)}>
-                                        <Text style={{color:'#ebebeb'}}>{val.content}</Text>
+                                        <Text style={{color: '#ebebeb', fontFamily: 'Inter'}}>{val.content}</Text>
                                     </TouchableOpacity>)
                                 }
                             )}
@@ -80,12 +79,12 @@ class TestScreen extends React.Component {
                 {completed && <View style={styles.bodyContainer}>
                     <Text style={styles.resultText}>Your score: {currScore + " / " + tests.length} </Text>
                     <Text style={styles.submitText}>Share your result!</Text>
-                    <View style={{marginHorizontal: 75}}><Input style={{marginTop: 20}} value={this.state.nick}
-                                 onChangeText={(value) => this.handleChange(value)}
-                                 placeholder={"Nickname"}/>
+                    <View style={styles.submitInput}><Input value={this.state.nickname}
+                                                            onChangeText={(value) => this.handleChange(value)}
+                                                            placeholder={"Nickname"}/>
                     </View>
                     <TouchableOpacity style={styles.openButton} onPress={() => this.submitData()}>
-                        <Text style={{color: '#ffffff', paddingHorizontal: 2}}>Submit and proceed to results</Text>
+                        <Text style={styles.submitButtText}>Submit and proceed to results</Text>
                     </TouchableOpacity>
                 </View>
                 }
@@ -123,10 +122,10 @@ class TestScreen extends React.Component {
         }
     }
 
-    handleChange = (nick) => {
+    handleChange = (nickname) => {
         this.setState({
             ...this.state,
-            nick
+            nickname
         })
     }
     handleClick = (key) => {
@@ -150,13 +149,13 @@ class TestScreen extends React.Component {
     }
 
     submitData = () => {
-        const {nick, currScore, tags} = this.state;
+        const {nickname, currScore, tags} = this.state;
 
         const result = {
-            nick: nick,
+            nick: nickname,
             score: currScore,
             total: tests.length,
-            type: tags[0]
+            type: tags.join(",")
         }
 
         fetch(`http://tgryl.pl/quiz/result`, {
@@ -201,7 +200,6 @@ class TestScreen extends React.Component {
                 currQuestion: currQuestion + 1,
                 bar: 1,
                 duration: 30
-
             })
         } else {
             if (duration !== 0) {
@@ -213,7 +211,6 @@ class TestScreen extends React.Component {
                 }
             }
             this.setState({completed: true})
-
         }
     }
 }
@@ -235,12 +232,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderBottomWidth: 2,
         paddingVertical: 24,
-        borderColor:'#ebebeb',
-        backgroundColor:"#0045c0"
+        borderColor: '#ebebeb',
+        backgroundColor: "#0045c0"
     },
     headerText: {
-        color:'#ebebeb',
-        fontSize: 22,
+        color: '#ebebeb',
+        fontSize: 20,
+        fontFamily: 'Inter'
     },
     answersCont: {
         flexDirection: "row",
@@ -254,15 +252,16 @@ const styles = StyleSheet.create({
         fontSize: 24,
         paddingTop: 10,
         textAlign: 'center',
+        fontFamily: 'Inter'
     },
     checkButt: {
         marginVertical: 20,
         marginHorizontal: 10,
-        backgroundColor:"#0045c0",
+        backgroundColor: "#0045c0",
         alignItems: "center",
-        paddingStart:4,
+        paddingStart: 4,
         justifyContent: "center",
-        textAlign:'center',
+        textAlign: 'center',
         borderWidth: 1,
         borderRadius: 5,
         width: 180,
@@ -270,6 +269,7 @@ const styles = StyleSheet.create({
     },
     questionTop: {
         fontSize: 22,
+        fontFamily: 'Inter'
     },
     progressBar: {
         margin: 24,
@@ -285,6 +285,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         paddingBottom: 16,
         textAlign: 'center',
+        fontFamily: 'Roboto'
     },
 
     questionContainer: {
@@ -303,11 +304,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     submitText: {
-        marginTop: 40,
+        marginTop: 60,
         fontSize: 18,
         paddingTop: 10,
         textAlign: 'center',
+        fontFamily: 'Inter'
     },
-
+    submitButtText: {
+        color: '#ebebeb',
+        paddingHorizontal: 2,
+        fontFamily: 'Inter'
+    },
+    submitInput: {
+        marginHorizontal: 75,
+        backgroundColor: 'lightgray',
+        marginVertical: 20,
+        borderRadius: 8,
+    }
 });
 export default TestScreen

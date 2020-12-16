@@ -43,7 +43,7 @@ class ResultsScreen extends Component {
                     <Text style={styles.headerText}>Results</Text>
                 </View>
                 <Table style={styles.table}>
-                    <Row data={tableHead} style={styles.head} textStyle={[styles.text,{color:'#ebebeb', marginTop: 6}]}/>
+                    <Row data={tableHead} style={styles.head} textStyle={[styles.text,{color:'#ebebeb', marginTop: 6,textAlign: 'center', fontFamily:'Inter'}]}/>
                     {isLoading ? <Text>Loading...</Text> : <SafeAreaView style={{marginBottom:36}}>
                         <FlatList data={results} renderItem={this.renderItem}
                                   keyExtractor={(item, index) => index.toString()}
@@ -60,7 +60,7 @@ class ResultsScreen extends Component {
             item.date = item.createdOn.slice(0, 10);
         }
         return <Row data={[item.nick, item.score + "/" + item.total, item.type, item.date]} style={styles.text}
-                    textStyle={styles.text}/>
+                    textStyle={{textAlign: 'center',  padding: 4, fontFamily:'Roboto'}}/>
     }
 
     handleOnRefresh = () => {
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
         backgroundColor:"#0045c0",
     },
     text: {
-        textAlign: 'center',
         flex: 1,
         marginBottom: 4,
         padding: 4
@@ -103,7 +102,8 @@ const styles = StyleSheet.create({
     headerText: {
         color:'#ebebeb',
         fontSize: 36,
-        paddingBottom: 12
+        paddingBottom: 12,
+        fontFamily:'Inter'
     },
 
 });

@@ -6,21 +6,25 @@ import {createDrawerNavigator} from "@react-navigation/drawer";
 import TestScreen from "./screens/TestScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyModal from "./components/MyModal";
+// import AppLoading from 'expo-app-loading';
+import {ActivityIndicator} from "react-native";
+import * as Font from 'expo-font';
 
-
-const lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-    "Duis quis accumsan mauris. Donec volutpat elit sit amet magna malesuada, vitae lobortis odio faucibus. " +
-    "Donec commodo mauris suscipit mi luctus convallis. Nam suscipit scelerisque nisi vulputate rutrum. Etiam tincidunt, " +
-    "libero et lobortis tincidunt, urna est tristique turpis, sed facilisis dolor orci et ante.";
 
 const Drawer = createDrawerNavigator();
 
 export default class App extends React.Component {
     state = {
-        rulesVisible: false
+        rulesVisible: false,
+        fontsLoaded:false
     }
 
     render() {
+
+        if (!this.state.fontsLoaded) {
+            return <ActivityIndicator />;
+        }
+
         const {rulesVisible}=  this.state
         return (
             <NavigationContainer>
@@ -28,16 +32,23 @@ export default class App extends React.Component {
                 <Drawer.Navigator initialRouteName="Home">
                     <Drawer.Screen name="Home" component={HomeScreen}/>
                     <Drawer.Screen name="Result" component={ResultsScreen} options={{unmountOnBlur:true}}/>
-                    {/*TODO map*/}
                     <Drawer.Screen name="Test" component={TestScreen} options={{unmountOnBlur:true}}/>
                 </Drawer.Navigator>
             </NavigationContainer>
-
-
         );
     }
 
+    loadFonts = () =>{
+        Font.loadAsync({
+            Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
+            Inter: require("./assets/fonts/Inter-Medium.ttf")
+        }).then(r =>{
+            this.setState({ fontsLoaded: true})
+        });
+    };
+
     componentDidMount() {
+        this.loadFonts()
         getData().then(r => {
             if (r !== 'accepted5') {
                 this.setState({rulesVisible:true})
