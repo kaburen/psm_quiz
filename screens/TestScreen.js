@@ -6,33 +6,10 @@ import {getData} from "../utils/Storage";
 import NetInfo from "@react-native-community/netinfo";
 
 const _ = require('lodash');
-let tests = [{
-    "question": "Loading...",
-    "answers": [
-        {
-            "content": "Loading...",
-            "isCorrect": false
-        },
-        {
-            "content": "Loading...",
-            "isCorrect": false
-        },
-        {
-            "content": "Loading...",
-            "isCorrect": false
-        },
-        {
-            "content": "Loading...",
-            "isCorrect": false
-        },
-    ],
-    "duration": 5
-},]
-
 
 class TestScreen extends React.Component {
     state = {
-        tests:[],
+        tests: [],
         test: {
             question: "",
             answers: [],
@@ -50,7 +27,7 @@ class TestScreen extends React.Component {
     }
 
     render() {
-        const {currQuestion, test, completed, currScore, duration, bar, loaded, name} = this.state
+        const {currQuestion, test, completed, currScore, duration, bar, loaded, name, tests} = this.state
         return (
             <View style={styles.mainContainer}>
                 <ActionBar font={20} title={name}/>
@@ -62,7 +39,7 @@ class TestScreen extends React.Component {
                             <Text style={styles.questionTop}>{"Time: " + duration + " sec"}</Text>
                         </View>
                         <ProgressBarAndroid styleAttr="Horizontal" indeterminate={false} progress={bar}
-                                            style={styles.progressBar}/>
+                                     style={styles.progressBar}/>
                         <View style={styles.questionBot}>
                             <Text numberOfLines={6} style={styles.questionText}>{test.question}</Text>
                         </View>
@@ -118,7 +95,7 @@ class TestScreen extends React.Component {
     componentDidUpdate() {
         if (!this.state.completed) {
             if (this.state.duration === 0) {
-                this.nextQuestion(1).then(r => {
+                this.nextQuestion(1).then(() => {
                     this.loadTest()
                 })
             }
@@ -134,32 +111,33 @@ class TestScreen extends React.Component {
 
     handleClick = (key) => {
         this.nextQuestion(key)
-            .then(r => {
+            .then(() => {
                 this.loadTest()
             })
     }
 
     loadDb = async () => {
         const {id} = this.props.route.params
-        console.log(id)
+        // console.log(id)
         await getData(id)
             .then(data => {
                 data = JSON.parse(data)
-                tests = _.shuffle(data.tasks)
                 this.setState({
+                    tests: _.shuffle(data.tasks),
                     tags: data.tags,
                     name: data.name,
                     loaded: true
-                }, () => console.log(data))
+                }, () => console.log('gotTest'))
             })
-            .then(r => this.loadTest(),()=>console.log('loadtest'))
-            .then(r => {
-                this.setState({isLoading: false}, () => console.log('gotTest'));
+            .then(() => {
+                this.loadTest();
+            })
+            .then(() => {
+                this.setState({isLoading: false}, () => console.log('ready'));
             })
 
         return true
     }
-
     // fetchData = () => {
     //     const {id} = this.props.route.params
     //     fetch(`http://tgryl.pl/quiz/test/${id}`)
@@ -173,9 +151,8 @@ class TestScreen extends React.Component {
     //             this.setState({isLoading: false},()=>console.log('gotTest'));
     //         });
     // }
-
     submitData = () => {
-        const {nickname, currScore, tags} = this.state;
+        const {nickname, currScore, tags, tests} = this.state;
         checkConnectivity().then(net => {
             if (net) {
                 const result = {
@@ -197,7 +174,6 @@ class TestScreen extends React.Component {
             }
         })
 
-
     }
 
     saveResult = () => {
@@ -206,7 +182,7 @@ class TestScreen extends React.Component {
     }
 
     loadTest = () => {
-        const {currQuestion} = this.state
+        const {currQuestion, tests} = this.state
         this.setState({
             test: {
                 question: tests[currQuestion].question,
@@ -218,7 +194,7 @@ class TestScreen extends React.Component {
     }
 
     nextQuestion = async (key) => {
-        const {test, currScore, currQuestion, duration} = this.state
+        const {test, currScore, currQuestion, duration, tests} = this.state
         if (currQuestion < tests.length - 1) {
             if (duration !== 0) {
                 if (test.answers[key].isCorrect) {
@@ -265,19 +241,6 @@ const styles = StyleSheet.create({
         flex: 7,
         backgroundColor: '#ebebeb',
         paddingTop: 30,
-    },
-    headerContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderBottomWidth: 2,
-        paddingVertical: 24,
-        borderColor: '#ebebeb',
-        backgroundColor: "#0045c0"
-    },
-    headerText: {
-        color: '#ebebeb',
-        fontSize: 20,
-        fontFamily: 'Inter'
     },
     answersCont: {
         flexDirection: "row",

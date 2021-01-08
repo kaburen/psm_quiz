@@ -11,12 +11,11 @@ class HomeScreen extends React.Component {
     state = {
         isLoading: true,
         quizList: [],
-        isConnected: false
     };
 
     render() {
         let {navigation} = this.props;
-        const {isLoading, quizList, isConnected} = this.state
+        const {isLoading, quizList} = this.state
         return (
             <View style={styles.mainContainer}>
                 <ActionBar font={36} title={"Home Screen"}/>
@@ -54,7 +53,7 @@ class HomeScreen extends React.Component {
             this.setState({
                 quizList: _.shuffle(JSON.parse(data)),
                 isLoading: false
-            }, () => console.log("got data"))
+            }, () => console.log("got data from db"))
         })
         return true
     }
