@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, FlatList, RefreshControl, Text, SafeAreaView} from 'react-native';
 import {Table, Row, Rows} from 'react-native-table-component';
+import ActionBar from "../components/ActionBar";
 
 const wait = (timeout) => {
     return new Promise(resolve => {
@@ -24,10 +25,10 @@ class ResultsScreen extends Component {
     }
 
     fetchData = () =>{
-        fetch('http://tgryl.pl/quiz/results')
+        fetch('http://tgryl.pl/quiz/results?last=50')
             .then((response) => response.json())
             .then((json) => {
-                this.setState({results: json});
+                this.setState({results: json.reverse()});
             })
             .catch((error) => console.error(error))
             .finally(() => {
@@ -39,9 +40,7 @@ class ResultsScreen extends Component {
         const {results, refreshing, isLoading, tableHead} = this.state
         return (
             <View style={styles.container}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerText}>Results</Text>
-                </View>
+                <ActionBar font={36} title={"Results"}/>
                 <Table style={styles.table}>
                     <Row data={tableHead} style={styles.head} textStyle={[styles.text,{color:'#ebebeb', marginTop: 6,textAlign: 'center', fontFamily:'Inter'}]}/>
                     {isLoading ? <Text>Loading...</Text> : <SafeAreaView style={{marginBottom:36}}>
@@ -77,7 +76,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        paddingTop: 30,
+        marginTop: 28,
         backgroundColor: '#0045c0',
     },
     head: {
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
     },
     table: {
         backgroundColor: "#ebebeb",
-        flex: 1,
+        flex: 7,
     },
     headerContainer: {
         alignItems: 'center',

@@ -1,8 +1,11 @@
 import React from 'react';
 import {ProgressBarAndroid, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Input} from 'react-native-elements';
+import ActionBar from "../components/ActionBar";
+import {getData} from "../utils/Storage";
+import NetInfo from "@react-native-community/netinfo";
 
-
+const _ = require('lodash');
 let tests = [{
     "question": "Loading...",
     "answers": [
@@ -29,6 +32,7 @@ let tests = [{
 
 class TestScreen extends React.Component {
     state = {
+        tests:[],
         test: {
             question: "",
             answers: [],
@@ -42,17 +46,15 @@ class TestScreen extends React.Component {
         loaded: false,
         isLoading: true,
         tags: [],
+        name: ''
     }
 
     render() {
-        const {title} = this.props.route.params
-        const {currQuestion, test, completed, currScore, duration, bar, loaded, isLoading} = this.state
+        const {currQuestion, test, completed, currScore, duration, bar, loaded, name} = this.state
         return (
             <View style={styles.mainContainer}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.headerText}>{title}</Text>
-                </View>
-                {!loaded && isLoading ? <Text>Loading...</Text> : (<>
+                <ActionBar font={20} title={name}/>
+                {!loaded ? <Text>Loading...</Text> : (<>
                     {!completed && <View style={styles.bodyContainer}>
                         <View style={styles.questionContainer}>
                             <Text
@@ -93,8 +95,9 @@ class TestScreen extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchData()
-        this.setState({loaded: true})
+        this.loadDb().then(() => {
+        })
+
         if (!this.state.completed) {
             this.interval = setInterval(
                 () => this.setState((prevState) => ({
@@ -128,44 +131,73 @@ class TestScreen extends React.Component {
             nickname
         })
     }
+
     handleClick = (key) => {
-        this.nextQuestion(key).then(r => {
-            this.loadTest()
-        })
+        this.nextQuestion(key)
+            .then(r => {
+                this.loadTest()
+            })
     }
 
-    fetchData = () => {
+    loadDb = async () => {
         const {id} = this.props.route.params
-        fetch(`http://tgryl.pl/quiz/test/${id}`)
-            .then((response) => response.json())
-            .then((json) => {
-                tests = json.tasks
-                this.setState({tags: json.tags})
-            }).then(() => this.loadTest())
-            .catch((error) => console.error(error))
-            .finally(() => {
-                this.setState({isLoading: false});
-            });
+        console.log(id)
+        await getData(id)
+            .then(data => {
+                data = JSON.parse(data)
+                tests = _.shuffle(data.tasks)
+                this.setState({
+                    tags: data.tags,
+                    name: data.name,
+                    loaded: true
+                }, () => console.log(data))
+            })
+            .then(r => this.loadTest(),()=>console.log('loadtest'))
+            .then(r => {
+                this.setState({isLoading: false}, () => console.log('gotTest'));
+            })
+
+        return true
     }
+
+    // fetchData = () => {
+    //     const {id} = this.props.route.params
+    //     fetch(`http://tgryl.pl/quiz/test/${id}`)
+    //         .then((response) => response.json())
+    //         .then((json) => {
+    //             tests = _.shuffle(json.tasks)
+    //             this.setState({tags: json.tags, loaded: true, name: json.name})
+    //         })
+    //         .then(() => this.loadTest())
+    //         .then(() => {
+    //             this.setState({isLoading: false},()=>console.log('gotTest'));
+    //         });
+    // }
 
     submitData = () => {
         const {nickname, currScore, tags} = this.state;
+        checkConnectivity().then(net => {
+            if (net) {
+                const result = {
+                    nick: nickname,
+                    score: currScore,
+                    total: tests.length,
+                    type: tags.join(",")
+                }
+                fetch(`http://tgryl.pl/quiz/result`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(result)
+                }).then(() => this.saveResult())
+            } else {
+                this.props.navigation.navigate('Home')
+            }
+        })
 
-        const result = {
-            nick: nickname,
-            score: currScore,
-            total: tests.length,
-            type: tags.join(",")
-        }
 
-        fetch(`http://tgryl.pl/quiz/result`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(result)
-        }).then(() => this.saveResult())
     }
 
     saveResult = () => {
@@ -178,7 +210,7 @@ class TestScreen extends React.Component {
         this.setState({
             test: {
                 question: tests[currQuestion].question,
-                answers: tests[currQuestion].answers,
+                answers: _.shuffle(tests[currQuestion].answers),
             },
             duration: tests[currQuestion].duration,
             barStatus: 1 / tests[currQuestion].duration
@@ -215,15 +247,22 @@ class TestScreen extends React.Component {
     }
 }
 
+//check network
+const checkConnectivity = async () => {
+    return await NetInfo.fetch().then(state => {
+        return state.isConnected
+    })
+}
+
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        marginTop: 24,
+        marginTop: 28,
         backgroundColor: '#ebebeb',
 
     },
     bodyContainer: {
-        flex: 1,
+        flex: 7,
         backgroundColor: '#ebebeb',
         paddingTop: 30,
     },
