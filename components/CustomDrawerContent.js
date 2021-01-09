@@ -9,31 +9,45 @@ const _ = require('lodash');
 export default class CustomDrawerContent extends React.Component {
     state = {
         ids: [],
+        tests: [],
+        isLoaded: false
     }
 
     render() {
-        return (
-            <DrawerContentScrollView {...this.props}>
+        const {navigation} = this.props
+        return (<>
                 <View style={styles.topContainer}>
                     <Text style={styles.title}>Quiz App</Text>
                     <Image style={{width: 120, height: 120}} source={require('../assets/quiz_splash.png')}/>
                 </View>
-                {/*<DrawerItemList {...this.props} />*/}
-                <View>
-                    <DrawerItem label={"Home"} onPress={() => this.props.navigation.navigate("Home")}/>
-                    <DrawerItem label={"Results"} onPress={() => this.props.navigation.navigate("Result")}/>
+                <View style={styles.itemsContainer}>
+                    <TouchableOpacity style={styles.checkButt} onPress={() => this.pickRandom()}>
+                        <Text style={styles.btnText}>Pick random</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.checkButt} onPress={() => this.fetchData(true)}>
+                        <Text style={styles.btnText}>Get data</Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.container}>
-                    <View style={styles.itemsContainer}>
-                        <TouchableOpacity style={styles.checkButt} onPress={() => this.pickRandom()}>
-                            <Text style={{color: "#fff"}}>Pick random</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.checkButt} onPress={() => this.fetchData(true)}>
-                            <Text style={{color: "#fff"}}>Get data</Text>
-                        </TouchableOpacity>
+                <DrawerContentScrollView style={{backgroundColor: "#ebebeb"}} {...this.props}>
+                    <View>
+                        <DrawerItem labelStyle={styles.label} label={"Home"}
+                                    onPress={() => navigation.navigate("Home")}/>
+                        <DrawerItem labelStyle={styles.label} label={"Results"}
+                                    onPress={() => navigation.navigate("Result")}/>
                     </View>
-                </View>
-            </DrawerContentScrollView>
+                    <View style={styles.line}>
+
+                    </View>
+                    {this.state.isLoaded && <View>
+                        {this.state.tests.map((data, key) => {
+                            return (
+                                <DrawerItem labelStyle={styles.label} key={key} label={data.name}
+                                            onPress={() => navigation.navigate('Test', {id: data.id})}/>)
+                        })}
+
+                    </View>}
+                </DrawerContentScrollView>
+            </>
         )
     }
 
@@ -66,7 +80,7 @@ export default class CustomDrawerContent extends React.Component {
                         json.map(item => {
                             ids.push(item.id)
                         })
-                        this.setState({ids: ids}, () => console.log("shuffled"))
+                        this.setState({ids: ids, tests: _.shuffle(json), isLoaded: true}, () => console.log("shuffled"))
                     })
                     .catch((error) => console.error(error))
             } else {
@@ -97,16 +111,11 @@ const checkConnectivity = async () => {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 8,
-
-    },
     topContainer: {
         alignItems: "center",
         backgroundColor: "#0045c0",
-        paddingVertical: 12
+        paddingVertical: 2,
+        marginTop: 28,
     },
     title: {
         fontSize: 26,
@@ -115,16 +124,27 @@ const styles = StyleSheet.create({
         color: '#ebebeb'
     },
     itemsContainer: {
-        flex: 1,
-    },
-    itemsContainer2: {
-        flex: 1,
+        backgroundColor: "#ebebeb"
     },
     checkButt: {
-        marginVertical: 15,
-        backgroundColor: "#545454",
-        paddingHorizontal: 50,
-        paddingVertical: 12,
+        backgroundColor: "#0045c0",
         alignItems: "center",
+        marginVertical: 20,
+        marginHorizontal: 20,
+        paddingVertical: 14,
     },
+    btnText: {
+        fontSize: 18,
+        color: "#ffffff"
+    },
+    line: {
+        paddingTop: 1,
+        backgroundColor: 'black',
+        marginHorizontal: 8
+    },
+    label: {
+        fontSize: 16,
+        color: "#000000"
+    }
+
 });
