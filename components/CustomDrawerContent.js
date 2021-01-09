@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Image} from 'react-native';
 import {DrawerContentScrollView, DrawerItem, DrawerItemList} from "@react-navigation/drawer";
 import {getData, storeData} from "../utils/Storage";
+import NetInfo from "@react-native-community/netinfo";
 
 const _ = require('lodash');
 
@@ -48,24 +49,31 @@ export default class CustomDrawerContent extends React.Component {
     }
 
     fetchData = (isDownload) => {
-        fetch('http://tgryl.pl/quiz/tests')
-            .then((response) => response.json())
-            .then((json) => {
-                if (isDownload) {
-                    storeData('db', JSON.stringify(json))
-                        .then(() => {
-                            getData('db')
-                                .then(r => console.log('downloaded headers'))
-                                .then(this.getTests)
+        checkConnectivity().then(r => {
+            if (r) {
+                fetch('http://tgryl.pl/quiz/tests')
+                    .then((response) => response.json())
+                    .then((json) => {
+                        if (isDownload) {
+                            storeData('db', JSON.stringify(json))
+                                .then(() => {
+                                    getData('db')
+                                        .then(r => console.log('downloaded headers'))
+                                        .then(this.getTests)
+                                })
+                        }
+                        let ids = []
+                        json.map(item => {
+                            ids.push(item.id)
                         })
-                }
-                let ids = []
-                json.map(item => {
-                    ids.push(item.id)
-                })
-                this.setState({ids: ids}, () => console.log("shuffled"))
-            })
-            .catch((error) => console.error(error))
+                        this.setState({ids: ids}, () => console.log("shuffled"))
+                    })
+                    .catch((error) => console.error(error))
+            } else {
+                console.log('no connection')
+            }
+        })
+
     }
 
     getTests = () => {
@@ -81,6 +89,11 @@ export default class CustomDrawerContent extends React.Component {
                 })
         })
     }
+}
+const checkConnectivity = async () => {
+    return await NetInfo.fetch().then(state => {
+        return state.isConnected
+    })
 }
 
 const styles = StyleSheet.create({

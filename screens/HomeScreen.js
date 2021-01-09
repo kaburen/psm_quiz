@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, Text, View, SafeAreaView, ScrollView, TouchableOpacity, AsyncStorage} from 'react-native';
 import NetInfo from "@react-native-community/netinfo";
 import SingleTest from "../components/SingleTest";
-import {getData, storeData} from "../utils/Storage";
+import {getData} from "../utils/Storage";
 import ActionBar from "../components/ActionBar";
 
 const _ = require('lodash');
@@ -44,7 +44,7 @@ class HomeScreen extends React.Component {
 
 
     componentDidMount() {
-        this.loadDb().then(r => {
+        this.loadDb().then(() => {
         })
     }
 

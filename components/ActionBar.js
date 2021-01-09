@@ -2,14 +2,17 @@ import React from "react";
 import {StyleSheet, Text, View} from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 
+
 export default class ActionBar extends React.Component {
-    state={
-        isConnected:false
+    state = {
+        isConnected: false,
     }
+    network;
+
     render() {
         return <>
             <View style={styles.headerContainer}>
-                <Text style={[styles.headerText,{fontSize:this.props.font}]}>{this.props.title}</Text>
+                <Text style={[styles.headerText, {fontSize: this.props.font}]}>{this.props.title}</Text>
             </View>
             {!this.state.isConnected && (<View style={styles.noNetwork}>
                 <Text style={styles.textNetwork}>You are currently in offline mode</Text>
@@ -18,11 +21,16 @@ export default class ActionBar extends React.Component {
     }
 
     componentDidMount() {
-        NetInfo.addEventListener(state => {
+        this.network = NetInfo.addEventListener(state => {
             this.setState({isConnected: state.isConnected})
-        });
+        })
+    }
+
+    componentWillUnmount() {
+        this.network()
     }
 }
+
 const styles = StyleSheet.create({
     headerContainer: {
         flex: 1,
