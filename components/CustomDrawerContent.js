@@ -24,7 +24,7 @@ export default class CustomDrawerContent extends React.Component {
                     <TouchableOpacity style={styles.checkButt} onPress={() => this.pickRandom()}>
                         <Text style={styles.btnText}>Pick random</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.checkButt} onPress={() => this.fetchData(true)}>
+                    <TouchableOpacity style={styles.checkButt} onPress={() => this.downloadData()}>
                         <Text style={styles.btnText}>Get data</Text>
                     </TouchableOpacity>
                 </View>
@@ -52,7 +52,15 @@ export default class CustomDrawerContent extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchData()
+        const d = new Date()
+        getData('currDate')
+            .then(date => {
+                if (date !== d.getFullYear() + '-' + d.getMonth() + '-' + d.getDay()) {
+                    this.downloadData()
+                } else {
+                    this.fetchData()
+                }
+            })
     }
 
     pickRandom = () => {
@@ -62,32 +70,58 @@ export default class CustomDrawerContent extends React.Component {
         navigation.navigate('Test', {id: rand[0]})
     }
 
-    fetchData = (isDownload) => {
+
+    downloadData = () => {
         checkConnectivity().then(r => {
             if (r) {
                 fetch('http://tgryl.pl/quiz/tests')
                     .then((response) => response.json())
                     .then((json) => {
-                        if (isDownload) {
-                            storeData('db', JSON.stringify(json))
-                                .then(() => {
-                                    getData('db')
-                                        .then(r => console.log('downloaded headers'))
-                                        .then(this.getTests)
-                                })
-                        }
-                        let ids = []
-                        json.map(item => {
-                            ids.push(item.id)
-                        })
-                        this.setState({ids: ids, tests: _.shuffle(json), isLoaded: true}, () => console.log("shuffled"))
+                        storeData('db', JSON.stringify(json))
+                            .then(() => {
+                                getData('db')
+                                    .then(data => JSON.parse(data))
+                                    .then(data => {
+                                        let ids = []
+                                        data.map(item => {
+                                            ids.push(item.id)
+                                        })
+                                        this.setState({
+                                            ids: ids,
+                                            tests: _.shuffle(data),
+                                            isLoaded: true
+                                        }, () => console.log("downloaded headers"))
+                                    })
+                                    .then(this.getTests)
+                                    .then(() => storeData('currDate', new Date().toISOString().slice(0, 10))
+                                        .then(r => {
+                                            console.log("zapisano date")
+                                        }))
+                            })
+
                     })
-                    .catch((error) => console.error(error))
             } else {
                 console.log('no connection')
             }
         })
+    }
 
+    fetchData = () => {
+        let ids = []
+        getData('db')
+            .then(data => JSON.parse(data))
+            .then(data => {
+                    data.map(item => {
+                        ids.push(item.id)
+                    })
+                    this.setState({
+                        ids: ids,
+                        tests: _.shuffle(data),
+                        isLoaded: true
+                    }, () => console.log("shuffled"))
+                }
+            )
+            .catch((error) => console.error(error))
     }
 
     getTests = () => {
